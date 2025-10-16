@@ -20,13 +20,13 @@ typedef enum
 #define ANIME_TASK_ARR_LEN          (16U)       /*动画单帧数组长度*/
 
 /*****************************************************************************/
-typedef void (*Anime_ArrExecute_Func)(const uint8_t *inputarr);
+typedef void (*Anime_ArrExecute_Func)(uint16_t *inputarr);
 
 typedef struct
 {
     uint8_t  u8target_mode;
     uint16_t u16target_delay;
-    uint8_t  u8target_steps;
+    uint16_t u16target_steps;
     uint8_t  u8target_reload_times;
     const uint8_t  (*pu8target_arr)[ANIME_TASK_ARR_LEN];
 }Anime_Target_Info_t;
@@ -38,6 +38,7 @@ typedef struct
     uint8_t  u8run_curr_mode;
     uint16_t u16run_delaycnt;
     uint16_t u16run_step_index;
+    uint8_t  u8run_reload_cnt;
 }Anime_Running_Info_t;
 
 typedef struct
@@ -57,7 +58,7 @@ extern Anime_Running_Info_t tAnime_Running_Info;
  * @note: 
  * @return [*]
  */
-extern void Anmie_Arr_Execute(uint8_t const  *input_arr);
+extern void Anmie_Arr_Execute(uint16_t *input_arr);
 
 /**
  * @breif: 
@@ -66,7 +67,7 @@ extern void Anmie_Arr_Execute(uint8_t const  *input_arr);
  * @param [uint8_t] mode
  * @return [*]
  */
-extern uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(const uint8_t*));
+extern uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(uint16_t*));
 /**
  * @breif: 
  * @note: 

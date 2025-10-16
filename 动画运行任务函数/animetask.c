@@ -3,8 +3,8 @@
  * @Date: 2024-05-30 10:15:03
  * @Version: V1.0
  * @LastEditors: guangnan.li
- * @LastEditTime: 2025-07-10 11:51:22
- * @FilePath: \2.Code\App\Src\animetask.c
+ * @LastEditTime: 2025-10-16 14:34:17
+ * @FilePath: \1.小工具\动画运行任务函数\animetask.c
  * @Description: 
  * 
  * Copyright (c) 2024 by ${NanNingLiaoWang Ltd.}, All Rights Reserved. 
@@ -115,28 +115,28 @@ const Anime_Target_Info_t tAnime_Target_Info[ANIME_MODE_MAX] =
     {
         .u8target_mode = ANIME_MODE_DRL_ON,
         .u16target_delay = 0,
-        .u8target_steps = 1,
+        .u16target_steps = 1,
         .u8target_reload_times = 0,
         .pu8target_arr = Anime_DRL_AllOn_Arr,
     },
     {
         .u8target_mode = ANIME_MODE_PL_ON,
         .u16target_delay = 0,
-        .u8target_steps = 1,
+        .u16target_steps = 1,
         .u8target_reload_times = 0,
         .pu8target_arr = Anime_PL_AllOn_Arr,    
     },
     {
         .u8target_mode = ANIME_MODE_WEL,
         .u16target_delay = 0,
-        .u8target_steps = 70,
+        .u16target_steps = 70,
         .u8target_reload_times = 0,
         .pu8target_arr = Anime_Wel_Arr,    
     },
     {
         .u8target_mode = ANIME_MODE_PL_ON,
         .u16target_delay = 0,
-        .u8target_steps = 16,
+        .u16target_steps = 16,
         .u8target_reload_times = 0,
         .pu8target_arr = Anime_Frw_Arr,    
     },
@@ -144,7 +144,7 @@ const Anime_Target_Info_t tAnime_Target_Info[ANIME_MODE_MAX] =
 Anime_Input_Info_t tInput_Info;
 Anime_Running_Info_t tAnime_Running_Info = {0};                     /*动画运行信息*/
 
-void Anmie_Arr_Execute(const uint8_t *input_arr)
+void Anmie_Arr_Execute(uint16_t *input_arr)
 {
 
 }
@@ -157,7 +157,7 @@ void Anmie_Arr_Execute(const uint8_t *input_arr)
  * @param [in] factor
  * @return [*]
  */
-uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(const uint8_t*))
+uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(uint16_t*))
 {
     uint8_t res = 0;
     ptinput_info->tinput_mode = (Anime_Mode_t)mode;
@@ -183,9 +183,8 @@ uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, voi
  * @param [in] *ptarget_info
  * @return [*]
  */
-void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun_info, Anime_Target_Info_t const *ptarget_info)
+void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun_info, Anime_Target_Info_t *ptarget_info)
 {
-    static uint8_t reload_cnt = 0;
     bool process_pass = false;
     uint8_t i = 0;
 
@@ -196,7 +195,7 @@ void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun
             if (ptinput_info->tinput_mode == ptarget_info[i].u8target_mode)     /*检查输入动画模式是否匹配*/
             {
                 ptrun_info->u8run_curr_mode = ptinput_info->tinput_mode;        /*传递输入模式*/
-                reload_cnt = 0;
+                ptrun_info->u8run_reload_cnt = 0;
                 process_pass = true;
                 break;
             }
@@ -227,23 +226,23 @@ void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun
             if (ptrun_info->u16run_timercnt >= ANIME_TASK_TIMEREXPIERED)                            /*定时器超时进入*/
             {
                 ptrun_info->u16run_timercnt -= ANIME_TASK_TIMEREXPIERED;
-                if (ptrun_info->u16run_step_index < ptarget_info[i].u8target_steps - 1) /*动画未结束*/
+                if (ptrun_info->u16run_step_index < ptarget_info[i].u16target_steps - 1) /*动画未结束*/
                 {
                     ptrun_info->u16run_step_index++; /*动画步骤累加*/
                     ptinput_info->bfeedback_runtoend = false;
                 }
                 else
                 {
-                    if (reload_cnt < ptarget_info[i].u8target_reload_times)
+                    if (ptrun_info->u8run_reload_cnt < ptarget_info[i].u8target_reload_times)
                     {
-                        reload_cnt ++;
+                        ptrun_info->u8run_reload_cnt ++;
                         ptrun_info->u16run_step_index = 0; /*动画结束进入循环*/
                         ptinput_info->bfeedback_runtoend = false;
                     }
                     else
                     {
-                        reload_cnt = ptarget_info[i].u8target_reload_times;
-                        ptrun_info->u16run_step_index = ptarget_info[i].u8target_steps - 1; /*动画结束保持最后状态*/
+                        ptrun_info->u8run_reload_cnt = ptarget_info[i].u8target_reload_times;
+                        ptrun_info->u16run_step_index = ptarget_info[i].u16target_steps - 1; /*动画结束保持最后状态*/
                         ptinput_info->bfeedback_runtoend = true;
                     }
                 }
