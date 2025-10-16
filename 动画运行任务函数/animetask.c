@@ -117,28 +117,28 @@ const Anime_Target_Info_t tAnime_Target_Info[ANIME_MODE_MAX] =
         .u16target_delay = 0,
         .u16target_steps = 1,
         .u8target_reload_times = 0,
-        .pu8target_arr = Anime_DRL_AllOn_Arr,
+        .pu16target_arr = Anime_DRL_AllOn_Arr,
     },
     {
         .u8target_mode = ANIME_MODE_PL_ON,
         .u16target_delay = 0,
         .u16target_steps = 1,
         .u8target_reload_times = 0,
-        .pu8target_arr = Anime_PL_AllOn_Arr,    
+        .pu16target_arr = Anime_PL_AllOn_Arr,    
     },
     {
         .u8target_mode = ANIME_MODE_WEL,
         .u16target_delay = 0,
         .u16target_steps = 70,
         .u8target_reload_times = 0,
-        .pu8target_arr = Anime_Wel_Arr,    
+        .pu16target_arr = Anime_Wel_Arr,    
     },
     {
         .u8target_mode = ANIME_MODE_PL_ON,
         .u16target_delay = 0,
         .u16target_steps = 16,
         .u8target_reload_times = 0,
-        .pu8target_arr = Anime_Frw_Arr,    
+        .pu16target_arr = Anime_Frw_Arr,    
     },
 };
 Anime_Input_Info_t tInput_Info;
@@ -222,7 +222,7 @@ void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun
         if (ptrun_info->u16run_delaycnt >= ptarget_info[i].u16target_delay) /*达到对应延时时间*/
         {
             ptrun_info->u16run_delaycnt = ptarget_info[i].u16target_delay;                          /*保持延时到达时间*/
-            ptinput_info->tinput_func(ptarget_info[i].pu8target_arr[ptrun_info->u16run_step_index]); /*执行动画数组*/
+            ptinput_info->tinput_func(ptarget_info[i].pu16target_arr[ptrun_info->u16run_step_index]); /*执行动画数组*/
             if (ptrun_info->u16run_timercnt >= ANIME_TASK_TIMEREXPIERED)                            /*定时器超时进入*/
             {
                 ptrun_info->u16run_timercnt -= ANIME_TASK_TIMEREXPIERED;

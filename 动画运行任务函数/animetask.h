@@ -28,7 +28,7 @@ typedef struct
     uint16_t u16target_delay;
     uint16_t u16target_steps;
     uint8_t  u8target_reload_times;
-    const uint8_t  (*pu8target_arr)[ANIME_TASK_ARR_LEN];
+    const uint16_t  (*pu16target_arr)[ANIME_TASK_ARR_LEN];
 }Anime_Target_Info_t;
 
 typedef struct
