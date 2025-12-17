@@ -3,8 +3,8 @@
  * @Date: 2024-05-30 10:15:03
  * @Version: V1.0
  * @LastEditors: guangnan.li
- * @LastEditTime: 2025-10-16 14:34:17
- * @FilePath: \1.小工具\动画运行任务函数\animetask.c
+ * @LastEditTime: 2025-12-17 15:03:46
+ * @FilePath: \动画运行任务函数\animetask.c
  * @Description: 
  * 
  * Copyright (c) 2024 by ${NanNingLiaoWang Ltd.}, All Rights Reserved. 
@@ -12,245 +12,204 @@
 
 #include "animetask.h"
 
-const uint8_t Anime_PL_AllOn_Arr[][ANIME_TASK_ARR_LEN] = {
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-};
-const uint8_t Anime_DRL_AllOn_Arr[][ANIME_TASK_ARR_LEN] = {
-{	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-};
-const uint8_t Anime_Wel_Arr[][ANIME_TASK_ARR_LEN] = {
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	},
-{	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	},
-{	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	},
-{	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	},
-{	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	},
-{	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	},
-{	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	},
-{	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	},
-{	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	26,	},
-{	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	},
-{	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	50,	},
-{	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	},
-{	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	75,	},
-{	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	},
-{	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	88,	},
-{	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	63,	},
-{	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	38,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	},
-{	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	13,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	13,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-
-};
-const uint8_t Anime_Frw_Arr[][ANIME_TASK_ARR_LEN] = {
-{	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	100,	},
-{	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	},
+/* 
+ * @note 单帧全灭,用于ADB关闭状态
+ */
+static uint16_t const Anime_ADB_Off_Arr[1][ANIME_TASK_ARR_LEN] = 
+{
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-const Anime_Target_Info_t tAnime_Target_Info[ANIME_MODE_MAX] = 
+/* 
+ * @note 单帧全亮,用于ADB开启状态
+ */
+static uint16_t const Anime_ADB_On_Arr[1][ANIME_TASK_ARR_LEN] = 
+{
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+/* 
+ * @note 
+ */
+static uint16_t const Anime_ADB_Wel_Arr[51][ANIME_TASK_ARR_LEN] = 
+{
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+/* 
+ * @note 
+ */
+static uint16_t const Anime_ADB_Frw_Arr[51][ANIME_TASK_ARR_LEN] = 
+{
+{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+};
+
+/* 目标动画信息表 */
+Anime_Target_Info_t const tAnime_Target_Info[ANIME_MODE_MAX] = 
 {
     {
-        .u8target_mode = ANIME_MODE_DRL_ON,
-        .u16target_delay = 0,
-        .u16target_steps = 1,
-        .u8target_reload_times = 0,
-        .pu16target_arr = Anime_DRL_AllOn_Arr,
+        .u8target_mode = ANIME_MODE_ADB_OFF,
+        .u16target_delay = 0U,
+        .u16target_steps = 1U,
+        .u8target_reload_times = 0U,
+        .pu16target_arr = Anime_ADB_Off_Arr,
     },
     {
-        .u8target_mode = ANIME_MODE_PL_ON,
-        .u16target_delay = 0,
-        .u16target_steps = 1,
-        .u8target_reload_times = 0,
-        .pu16target_arr = Anime_PL_AllOn_Arr,    
+        .u8target_mode = ANIME_MODE_ADB_ON,
+        .u16target_delay = 0U,
+        .u16target_steps = 1U,
+        .u8target_reload_times = 0U,
+        .pu16target_arr = Anime_ADB_On_Arr,    
     },
     {
-        .u8target_mode = ANIME_MODE_WEL,
-        .u16target_delay = 0,
-        .u16target_steps = 70,
-        .u8target_reload_times = 0,
-        .pu16target_arr = Anime_Wel_Arr,    
+        .u8target_mode = ANIME_MODE_ADB_WEL,
+        .u16target_delay = 0U,
+        .u16target_steps = 51U,
+        .u8target_reload_times = 0U,
+        .pu16target_arr = Anime_ADB_Wel_Arr,
     },
     {
-        .u8target_mode = ANIME_MODE_PL_ON,
-        .u16target_delay = 0,
-        .u16target_steps = 16,
-        .u8target_reload_times = 0,
-        .pu16target_arr = Anime_Frw_Arr,    
+        .u8target_mode = ANIME_MODE_ADB_FRW,
+        .u16target_delay = 0U,
+        .u16target_steps = 51U,
+        .u8target_reload_times = 0U,
+        .pu16target_arr = Anime_ADB_Frw_Arr,
     },
 };
-Anime_Input_Info_t tInput_Info;
-Anime_Running_Info_t tAnime_Running_Info = {0};                     /*动画运行信息*/
+Anime_Input_Info_t tAnime_Info_In;
+static Anime_Running_Info_t tAnime_Running_Info = {0U};  /* 动画运行信息(内部静态变量) */
 
-void Anmie_Arr_Execute(uint16_t *input_arr)
-{
-
-}
+// /**
+//  * @brief 动画数组执行函数(用户需要实现)
+//  * @param[in] input_arr 输入的动画数组指针
+//  * @return 无
+//  */
+// void Anime_Arr_Execute(uint16_t const *input_arr)
+// {
+//     /* 用户需要在此实现具体的动画执行逻辑 */
+//     (void)input_arr;  /* 避免未使用参数警告 */
+// }
 
 /**
- * @breif: 
- * @note: 
- * @param [in] *ptinput_info
- * @param [in] mode
- * @param [in] factor
- * @return [*]
+ * @brief 初始化动画输入信息
+ * @param[out] ptinput_info 输入信息结构体指针
+ * @param[in]  mode 动画模式
+ * @param[in]  func 动画执行回调函数
+ * @return uint8_t ANIME_RET_OK:成功, ANIME_RET_ERR_PARAM:参数错误
  */
-uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(uint16_t*))
+uint8_t Anime_InputInfo_Init(Anime_Input_Info_t *ptinput_info, uint8_t mode, void (*func)(uint16_t const *))
 {
-    uint8_t res = 0;
-    ptinput_info->tinput_mode = (Anime_Mode_t)mode;
-    ptinput_info->bfeedback_runtoend = true;
-    if (func != NULL)
+    uint8_t res;
+    
+    if (ptinput_info == NULL)
     {
-        ptinput_info->tinput_func = func;
-        res = 0;
+        res = ANIME_RET_ERR_PARAM;
     }
     else
     {
-        res = 1;
+        ptinput_info->tinput_mode = (Anime_Mode_t)mode;
+        ptinput_info->bfeedback_runtoend = true;
+        
+        if (func != NULL)
+        {
+            ptinput_info->tinput_func = func;
+            res = ANIME_RET_OK;
+        }
+        else
+        {
+            res = ANIME_RET_ERR_PARAM;
+        }
     }
 
     return res;
 }
 
 /**
- * @breif: 
- * @note: 
- * @param [in] *ptinput_info
- * @param [in] *ptrun_info
- * @param [in] *ptarget_info
- * @return [*]
+ * @brief 动画任务运行主函数(使用内部静态运行信息)
+ * @param[in,out] ptinput_info 输入信息结构体指针
+ * @param[in]     ptarget_info 目标动画信息数组指针
+ * @return 无
  */
-void Anime_Task_Run(Anime_Input_Info_t *ptinput_info,Anime_Running_Info_t *ptrun_info, Anime_Target_Info_t *ptarget_info)
+void Anime_Task_Run(Anime_Input_Info_t *ptinput_info, Anime_Target_Info_t const *ptarget_info)
 {
     bool process_pass = false;
-    uint8_t i = 0;
+    uint8_t i = 0U;
+    uint8_t matched_index = 0U;  /* 保存匹配的索引 */
 
-    if (ptinput_info != NULL && ptrun_info != NULL && ptarget_info != NULL)     /*指针校验*/
+    /* 指针校验 */
+    if ((ptinput_info != NULL) && (ptarget_info != NULL))
     {
-        for (i = 0; i < ANIME_MODE_MAX; i++)
+        /* 检查输入动画模式是否匹配 */
+        for (i = 0U; i < (uint8_t)ANIME_MODE_MAX; i++)
         {
-            if (ptinput_info->tinput_mode == ptarget_info[i].u8target_mode)     /*检查输入动画模式是否匹配*/
+            if ((uint8_t)ptinput_info->tinput_mode == ptarget_info[i].u8target_mode)
             {
-                ptrun_info->u8run_curr_mode = ptinput_info->tinput_mode;        /*传递输入模式*/
-                ptrun_info->u8run_reload_cnt = 0;
+                tAnime_Running_Info.u8run_curr_mode = (uint8_t)ptinput_info->tinput_mode;  /* 传递输入模式 */
+                tAnime_Running_Info.u8run_reload_cnt = 0U;
+                matched_index = i;  /* 保存匹配的索引 */
                 process_pass = true;
                 break;
             }
-            process_pass = false;
         }
-    }
-    else
-    {
-        process_pass = false;
     }
 
     if (process_pass)
     {
-        ptrun_info->u16run_timercnt += ANIME_TASK_TIMERCNT;             /*定时器计数累加*/
-        ptrun_info->u16run_delaycnt += ANIME_TASK_TIMERCNT;
+        tAnime_Running_Info.u16run_timercnt += ANIME_TASK_TIMERCNT;  /* 定时器计数累加 */
 
-        if (ptrun_info->u8run_last_mode != ptrun_info->u8run_curr_mode) /*模式变化，新状态打断旧状态*/
+        /* 模式变化,新状态打断旧状态 */
+        if (tAnime_Running_Info.u8run_last_mode != tAnime_Running_Info.u8run_curr_mode)
         {
-            ptrun_info->u16run_step_index = 0; /*重置动画索引*/
-            ptrun_info->u16run_delaycnt = 0;  /*重置延时*/
-            ptrun_info->u8run_last_mode = ptrun_info->u8run_curr_mode;
+            tAnime_Running_Info.u16run_step_index = 0U;   /* 重置动画索引 */
+            tAnime_Running_Info.u16run_delaycnt = 0U;     /* 重置延时 */
+            tAnime_Running_Info.u8run_last_mode = tAnime_Running_Info.u8run_curr_mode;
+            ptinput_info->bfeedback_runtoend = false;
         }
 
-        if (ptrun_info->u16run_delaycnt >= ptarget_info[i].u16target_delay) /*达到对应延时时间*/
+#ifdef ANIME_TASK_DELAY_ENABLE
+        tAnime_Running_Info.u16run_delaycnt += ANIME_TASK_TIMERCNT;
+
+        if (tAnime_Running_Info.u16run_delaycnt < ptarget_info[matched_index].u16target_delay)
         {
-            ptrun_info->u16run_delaycnt = ptarget_info[i].u16target_delay;                          /*保持延时到达时间*/
-            ptinput_info->tinput_func(ptarget_info[i].pu16target_arr[ptrun_info->u16run_step_index]); /*执行动画数组*/
-            if (ptrun_info->u16run_timercnt >= ANIME_TASK_TIMEREXPIERED)                            /*定时器超时进入*/
-            {
-                ptrun_info->u16run_timercnt -= ANIME_TASK_TIMEREXPIERED;
-                if (ptrun_info->u16run_step_index < ptarget_info[i].u16target_steps - 1) /*动画未结束*/
-                {
-                    ptrun_info->u16run_step_index++; /*动画步骤累加*/
-                    ptinput_info->bfeedback_runtoend = false;
-                }
-                else
-                {
-                    if (ptrun_info->u8run_reload_cnt < ptarget_info[i].u8target_reload_times)
-                    {
-                        ptrun_info->u8run_reload_cnt ++;
-                        ptrun_info->u16run_step_index = 0; /*动画结束进入循环*/
-                        ptinput_info->bfeedback_runtoend = false;
-                    }
-                    else
-                    {
-                        ptrun_info->u8run_reload_cnt = ptarget_info[i].u8target_reload_times;
-                        ptrun_info->u16run_step_index = ptarget_info[i].u16target_steps - 1; /*动画结束保持最后状态*/
-                        ptinput_info->bfeedback_runtoend = true;
-                    }
-                }
-            }
+            /* 延时未到，不执行动画 */
         }
         else
-        {
-            ptrun_info->u16run_delaycnt = 0; /*未到达延时不增加动画分辨率计数*/
+#endif
+        {   /* 达到对应延时时间 */
+            tAnime_Running_Info.u16run_delaycnt = ptarget_info[matched_index].u16target_delay;  /* 保持延时到达时间 */
+            
+            /* 检查函数指针有效性后再调用 */
+            if (ptinput_info->tinput_func != NULL)
+            {
+                ptinput_info->tinput_func(ptarget_info[matched_index].pu16target_arr[tAnime_Running_Info.u16run_step_index]);  /* 执行动画数组 */
+            }
+            
+            /* 定时器超时进入 */
+            if (tAnime_Running_Info.u16run_timercnt >= ANIME_TASK_TIMEREXPIERED)
+            {
+                tAnime_Running_Info.u16run_timercnt -= ANIME_TASK_TIMEREXPIERED;
+                
+                /* 动画未结束 */
+                if (tAnime_Running_Info.u16run_step_index < (ptarget_info[matched_index].u16target_steps - 1U))
+                {
+                    tAnime_Running_Info.u16run_step_index++;  /* 动画步骤累加 */
+                    ptinput_info->bfeedback_runtoend = false;
+                }
+#ifdef ANIME_TASK_RELOAD_ENABLE
+                else if (tAnime_Running_Info.u8run_reload_cnt < ptarget_info[matched_index].u8target_reload_times)
+                {
+                    tAnime_Running_Info.u8run_reload_cnt++;
+                    tAnime_Running_Info.u16run_step_index = 0U;  /* 动画结束进入循环 */
+                    ptinput_info->bfeedback_runtoend = false;
+                }
+#endif
+                else
+                {
+                    tAnime_Running_Info.u8run_reload_cnt = ptarget_info[matched_index].u8target_reload_times;
+                    tAnime_Running_Info.u16run_step_index = ptarget_info[matched_index].u16target_steps - 1U;  /* 动画结束保持最后状态 */
+                    ptinput_info->bfeedback_runtoend = true;
+                }
+            }
         }
     }
 }

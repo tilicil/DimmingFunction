@@ -19,7 +19,7 @@ import numpy as np
 import math
 
 #修改本变量可以更改点数，如16、32、64等
-POINT_NUM = 40
+POINT_NUM = 36
 
 #指数曲线最大为2的MAX_POWER次方
 MAX_POWER = 8
@@ -60,7 +60,16 @@ for i in range(len(val)):
 
 print(line)
 print("*"*80)
+print("整数序列:")
 print(list(map(int,val)))
+
+# 将序列等比例转换为浮点型，范围为 0.0 - 1.0（以当前最大值为基准）
+max_val_after = max(val) if len(val) > 0 else 1
+float_vals = [v / float(max_val_after) for v in val]
+# 保留 6 位小数便于查看和写入 C 文件
+float_vals_rounded = [round(f, 6) for f in float_vals]
+print("等比例浮点序列 (范围 0.0-1.0):")
+print(float_vals_rounded)
 
 #写入序列到文件
 with open("py_exponent_Wave.c",'w',encoding= 'UTF-8') as f:
@@ -71,6 +80,12 @@ with open("py_exponent_Wave_hex.c",'w',encoding= 'UTF-8') as f:
     # 转换为十六进制并将其格式化为字符串，不带逗号、方括号和引号
     hex_values = ', '.join(map(lambda x: hex(int(x)), val))  # 生成格式化的字符串
     f.write(hex_values)  # 写入文件
+
+# 将浮点序列写入新文件，便于在 C/其他环境中引用
+with open("py_exponent_Wave_float.c",'w',encoding= 'UTF-8') as f:
+    # 使用固定小数位格式输出
+    float_values = ', '.join(map(lambda x: "{:.6f}".format(x), float_vals_rounded))
+    f.write(float_values)
 
 #绘图
 plt.plot(line,val,"-o")
