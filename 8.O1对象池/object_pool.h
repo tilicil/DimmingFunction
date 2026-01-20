@@ -4,17 +4,17 @@
 #include <stdint.h>
 #include <stddef.h>
 
-// #define USED_BLOCK_MAGIC         /*使用魔数检查内存块状态，不允许连续释放两次*/
+#define USED_BLOCK_MAGIC         /*使用魔数检查内存块状态，不允许连续释放两次*/
 
 #ifdef USED_BLOCK_MAGIC
 
 #define BLOCK_MAGIC_FREE 0xDEADBEEF
 #define BLOCK_MAGIC_USED 0xCAFEBABE
-typedef struct Pool_BlockType
+typedef struct PoolBlock_Type
 {
     uint32_t u32Magic;             /* Magic number for debugging */
-    struct Pool_BlockType *ptNext; /*4Byte in 32bitMcu*/
-} Pool_BlockType;
+    struct PoolBlock_Type *ptNext; /*4Byte in 32bitMcu*/
+} PoolBlock_Type;
 
 #else
 
